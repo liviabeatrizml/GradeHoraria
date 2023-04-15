@@ -3,8 +3,8 @@
 
 ## :family_man_woman_girl: Equipe
 :man_teacher: Professor: [Ítalo Augusto de Souza Assis](https://github.com/italoaug).<br />
-:woman_student: Integrante: [Geisa Morais Gabriel](https://github.com/Geisa-mg).<br />
-:woman_student: Integrante: [Livia Beatriz Maia de Lima](https://github.com/liviabeatrizml).<br />
+:woman_student: Integrante: [Geísa Morais Gabriel](https://github.com/Geisa-mg).<br />
+:woman_student: Integrante: [Lívia Beatriz Maia de Lima](https://github.com/liviabeatrizml).<br />
 
 ## **:clipboard:** Requisitos 
 
@@ -12,7 +12,8 @@
 
 ## **:computer:** Desenvolvimento cronológico
 Projeto em andamento.
- - [x] Leitura do projeto, verificação do modelo do relatório, inicio das ações
+ - [x] Leitura do projeto, verificação do modelo do relatório, início da elaboração da introdução do relatório e discussão da implementação
+ - [ ] 
 
 ## **:hammer_and_wrench:** Construído com
  *  [Visual Studio Code](https://code.visualstudio.com/)
@@ -20,4 +21,4 @@ Projeto em andamento.
  *  [Meet](https://meet.google.com/)
 	 * Chamada via meet (Compartilhamento de tela ao vivo e reuniões)     
 ---
-Feito por [Livia Beatriz](https://github.com/liviabeatrizml) e [Geísa Morais](https://github.com/Geisa-mg)
+Feito por [Lívia Beatriz](https://github.com/liviabeatrizml) e [Geísa Morais](https://github.com/Geisa-mg)
