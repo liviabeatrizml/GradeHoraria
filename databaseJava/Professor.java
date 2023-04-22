@@ -1,15 +1,17 @@
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Professor{
+public class Professor {
     private String matricula;
     private String nome;
     private String titulacao;
     private String email;
     private String departamento;
+    private ComponenteCurricular cc;
     private static LinkedList<Professor> listaProfessor = new LinkedList<>();
 
-    public void inicializaProfessor(String matricula, String nome, String titulacao, String email, String departamento) {
+    public void inicializaProfessor(String matricula, String nome, String titulacao, String email,
+            String departamento) {
         this.matricula = matricula;
         this.nome = nome;
         this.titulacao = titulacao;
@@ -17,57 +19,57 @@ public class Professor{
         this.departamento = departamento;
     }
 
-    public static Professor cadastrarProfessor(String m, String n, String t, String e, String d){
+    public static Professor cadastrarProfessor(String m, String n, String t, String e, String d) {
         Professor prof = new Professor();
-        prof.inicializaProfessor(m,n,t,e,d);
+        prof.inicializaProfessor(m, n, t, e, d);
         System.out.println("Professor cadastrado.");
         listaProfessor.add(prof);
         return prof;
     }
 
-    public void excluirProfessor(String m, String n){
-        if(!listaProfessor.isEmpty()){
-            if(m == matricula && n == nome){
+    public void excluirProfessor(String m, String n) {
+        if (!listaProfessor.isEmpty()) {
+            if (m == matricula && n == nome) {
                 listaProfessor.remove();
                 System.out.println("Professor removido.");
             } else {
-                System.out.println("Professor não encontrado.");
+                System.out.println("Não existe professor cadastrado.");
             }
         }
     }
 
-    public void editarProfessor(){
+    public void editarProfessor() {
         String matricula, nome, titulacao, email, departamento;
         Scanner ent = new Scanner(System.in);
         int escolha[] = new int[6];
 
-        try{
+        try {
             for (int i = 0; i < escolha.length; i++) {
                 System.out.println("MENU\n");
                 System.out.println("O que você deseja editar: ");
 
-                do{
+                do {
                     System.out.println("->");
                     escolha[i] = ent.nextInt();
-                } while(escolha[i] > 6 || escolha[i] < 0);
+                } while (escolha[i] > 6 || escolha[i] < 0);
 
-                if(escolha[i] == 0){
+                if (escolha[i] == 0) {
                     System.out.println("Digite a matricula\n-> ");
                     matricula = ent.next();
                     setMatricula(matricula);
-                } else if(escolha[i] == 1){
+                } else if (escolha[i] == 1) {
                     System.out.println("Digite o nome\n-> ");
                     nome = ent.next();
                     setNome(nome);
-                } else if(escolha[i] == 2){
+                } else if (escolha[i] == 2) {
                     System.out.println("Digite o titulação\n-> ");
                     titulacao = ent.next();
                     setTitulacao(titulacao);
-                } else if(escolha[i] == 3){
+                } else if (escolha[i] == 3) {
                     System.out.println("Digite o email\n-> ");
                     email = ent.next();
                     setEmail(email);
-                } else if(escolha[i] == 4){
+                } else if (escolha[i] == 4) {
                     System.out.println("Digite a departamento\n-> ");
                     departamento = ent.next();
                     setDepartamento(departamento);
@@ -75,7 +77,7 @@ public class Professor{
                     break;
                 }
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println("Exceção: " + e);
             System.out.println("O dado informado não condiz com o que se pede.");
         } finally {
@@ -84,13 +86,13 @@ public class Professor{
         }
     }
 
-    public boolean validaProfessor(String m, String n){
+    public boolean validaProfessor(String m, String n) {
         return (m == matricula && n == nome) ? true : false;
     }
 
-    public static void buscarComponente(String c, String n){
+    public static void buscarComponente(String c, String n) {
         for (int i = 0; i < listaProfessor.size(); i++) {
-            if(listaProfessor.get(i).validaProfessor(c, n)){
+            if (listaProfessor.get(i).validaProfessor(c, n)) {
                 System.out.println(listaProfessor);
             } else {
                 System.out.println("Professor não existe.");
@@ -98,19 +100,24 @@ public class Professor{
         }
     }
 
-    public static void listaProfessor(){
+    public static void listaProfessor() {
         System.out.println(listaProfessor);
     }
 
-    // public void HorasAulaSemanal(){ //obs.: banco de dados
-    //     int aux;
-    //     for (int i = 1; i < getCargaHoraria(); i++) {
-    //         aux = getCargaHoraria()/i;
-    //         if(aux == 15){
-    //             System.out.println(i + " horas/aulas semanal");
-    //         }
-    //     }
-    // }
+    /*
+     * Um professor pode ministrar, no máximo, 20 horas-aula por semana
+     * somando a carga horária dos seus componentes curriculares
+     */
+
+    public void HorasAulaSemanal() { // obs.: banco de dados
+        int aux;
+        for (int i = 1; i < cc.getCargaHoraria(); i++) {
+            aux = cc.getCargaHoraria() / i;
+            if (aux == 15 && i <= 20) {
+                System.out.println("O professor ensina " + i + " horas semanais.");
+            }
+        }
+    }
 
     public String getMatricula() {
         return matricula;
@@ -158,5 +165,12 @@ public class Professor{
 
     public static void setListaProfessor(LinkedList<Professor> listaProfessor) {
         Professor.listaProfessor = listaProfessor;
-    }   
+    }
+
+    @Override
+    public String toString() {
+        return "Professor [matricula=" + matricula + ", nome=" + nome + ", titulacao=" + titulacao + ", email=" + email
+                + ", departamento=" + departamento + "]";
+    }
+
 }
