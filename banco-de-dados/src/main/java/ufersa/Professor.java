@@ -1,3 +1,8 @@
+package ufersa;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -7,35 +12,51 @@ public class Professor {
     private String titulacao;
     private String email;
     private String departamento;
-    private ComponenteCurricular cc;
+    private ComponenteCurricular disciplina;
     private static LinkedList<Professor> listaProfessor = new LinkedList<>();
 
-    public void inicializaProfessor(String matricula, String nome, String titulacao, String email,
-            String departamento) {
-        this.matricula = matricula;
-        this.nome = nome;
-        this.titulacao = titulacao;
-        this.email = email;
-        this.departamento = departamento;
-    }
+    //Metodos do banco de dados
+    public static void cadastrarProfessor(Statement stm){
+        Scanner ent = new Scanner(System.in);
+        String m, n, t, em, d;
+        System.out.print("Matricula: ");
+        m = ent.next();
+        System.out.print("Nome: ");
+        n = ent.next();
+        System.out.print("Titulacao: ");
+        t = ent.next();
+        System.out.print("Email: ");
+        em = ent.next();
+        System.out.print("Departamento: ");
+        d = ent.next();
 
-    public static Professor cadastrarProfessor(String m, String n, String t, String e, String d) {
-        Professor prof = new Professor();
-        prof.inicializaProfessor(m, n, t, e, d);
-        System.out.println("Professor cadastrado.");
-        listaProfessor.add(prof);
-        return prof;
-    }
+        String sql = "insert into professor (matricula, nome, titulacao, email, departamento) values ('" + m + "','" + n + "','" + t + "','" + em + "','" + d + "')";
 
-    public void excluirProfessor(String m, String n) {
-        if (!listaProfessor.isEmpty()) {
-            if (m == matricula && n == nome) {
-                listaProfessor.remove();
-                System.out.println("Professor removido.");
-            } else {
-                System.out.println("Não existe professor cadastrado.");
-            }
+        try {
+            stm.executeUpdate(sql);
+        } catch (SQLException e) {
+            ent.close();
+            e.printStackTrace();
         }
+    }
+
+    public static void excluirProfessor(Statement stm){
+        Scanner ent = new Scanner(System.in);
+        String m, n;
+        System.out.print("Matricula: ");
+        m = ent.next();
+        System.out.print("Nome: ");
+        n = ent.next();
+
+        String sql = "delete from professor where matricula = '" + m + "' and nome ='" + n +"'";
+
+        try {
+            stm.executeUpdate(sql);
+        } catch (SQLException e) {
+            ent.close();
+            e.printStackTrace();
+        }
+
     }
 
     public void editarProfessor() {
@@ -86,22 +107,39 @@ public class Professor {
         }
     }
 
-    public boolean validaProfessor(String m, String n) {
-        return (m == matricula && n == nome) ? true : false;
-    }
+    public static void buscarProfessor(Statement stm){
+        Scanner ent = new Scanner(System.in);
+        String m, n;
+        System.out.print("Matricula: ");
+        m = ent.next();
+        System.out.print("Nome: ");
+        n = ent.next();
 
-    public static void buscarComponente(String c, String n) {
-        for (int i = 0; i < listaProfessor.size(); i++) {
-            if (listaProfessor.get(i).validaProfessor(c, n)) {
-                System.out.println(listaProfessor);
-            } else {
-                System.out.println("Professor não existe.");
-            }
+        String sql = "select * from professor where matricula = '" + m + "' and nome ='" + n +"'";
+
+        try {
+            ResultSet result = stm.executeQuery(sql);
+            while(result.next()){
+                System.out.println("Professor encontrado");                 
+            } 
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        ent.close();
     }
 
-    public static void listaProfessor() {
-        System.out.println(listaProfessor);
+    public static void listaProfessor(Statement stm){
+        String sql = "select * from professor";
+
+        try {
+            ResultSet result = stm.executeQuery(sql);
+
+            while(result.next()){
+                System.out.println("Nome: " + result.getString("nome"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } 
     }
 
     /*
@@ -111,8 +149,8 @@ public class Professor {
 
     public void HorasAulaSemanal() { // obs.: banco de dados
         int aux;
-        for (int i = 1; i < cc.getCargaHoraria(); i++) {
-            aux = cc.getCargaHoraria() / i;
+        for (int i = 1; i < disciplina.getCargaHoraria(); i++) {
+            aux = disciplina.getCargaHoraria() / i;
             if (aux == 15 && i <= 20) {
                 System.out.println("O professor ensina " + i + " horas semanais.");
             }
