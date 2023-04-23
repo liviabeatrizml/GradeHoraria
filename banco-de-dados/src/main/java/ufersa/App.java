@@ -10,12 +10,18 @@ public class App {
             Connection bancodedados = Conexao.inicializaConexao();
             Statement stm = bancodedados.createStatement();
 
-            Professor.cadastrarProfessor(stm);
+            //COMPONENTE CURRICULAR
+            ComponenteCurricular.editarComponente(stm);
+
+            //PROFESSOR
+            //Professor.cadastrarProfessor(stm);
             //Professor.excluirProfessor(stm);
             //Professor.buscarProfessor(stm);
             //Professor.listaProfessor(stm);
-            
+            //
 
+            //TURMA
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
