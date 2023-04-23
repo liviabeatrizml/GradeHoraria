@@ -1,5 +1,6 @@
 package ufersa;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
@@ -13,81 +14,112 @@ public class ComponenteCurricular{
     private int periodo;
     private static LinkedList<ComponenteCurricular> listaComponente = new LinkedList<>();
 
-    public void inicializaComponente(String codigo, String nome, int cargaHoraria, String descricao, int periodo) {
-        this.codigo = codigo;
-        this.nome = nome;
-        this.cargaHoraria = cargaHoraria;
-        this.descricao = descricao;
-        this.periodo = periodo;
-    }
+    public static void cadastrarComponente(Statement stm){
+        Scanner ent = new Scanner(System.in);
+        String cod, nome, desc;
+        int carHor, per;
+        System.out.print("Código: ");
+        cod = ent.next();
+        System.out.print("Nome: ");
+        nome = ent.next();
+        System.out.print("Carga Horária: ");
+        carHor = ent.nextInt();
+        System.out.print("Descrição: ");
+        desc = ent.next();
+        System.out.print("Período: ");
+        per = ent.nextInt();
 
-    public static ComponenteCurricular cadastrarComponente(String c, String n, int ch, String d, int p){
-        ComponenteCurricular disciplina = new ComponenteCurricular();
-        disciplina.inicializaComponente(c, n, ch, d, p);
-        System.out.println("Componente cadastrado.");
-        listaComponente.add(disciplina);
-        return disciplina;
-    }
+        String sql = "insert into professor (codigo, nome, cargaHoraria, descricao, periodo) values ('" + cod + "','" + nome + "','" + carHor + "','" + desc + "','" + per + "')";
 
-    public void excluirComponente(String c){
-        if(!listaComponente.isEmpty()){
-            if(c == codigo){
-                listaComponente.remove();
-                System.out.println("Componente removido.");
-            } else {
-                System.out.println("Componente não encontrado.");
-            }
+        try {
+            stm.executeUpdate(sql);
+        } catch (SQLException e) {
+            ent.close();
+            e.printStackTrace();
         }
     }
 
-    public void editarComponente(){
-        int cargaHoraria, periodo;
-        String codigo, nome, descricao;
+    public void excluirComponente(Statement stm){
         Scanner ent = new Scanner(System.in);
-        int escolha[] = new int[6];
+        String cod;
+        System.out.print("Código: ");
+        cod = ent.next();
 
-        try{
-            for (int i = 0; i < escolha.length; i++) {
-                System.out.println("MENU\n");
-                System.out.println("O que você deseja editar: ");
+        String sql = "delete from professor where codigo = '" + cod + "'";
 
-                do{
-                    System.out.println("->");
+        try {
+            stm.executeUpdate(sql);
+        } catch (SQLException e) {
+            ent.close();
+            e.printStackTrace();
+        }
+    }
+
+    public static void editarComponente(Statement stm){
+        int carHor, per;
+        String cod, nome, desc, codInit;
+        Scanner ent = new Scanner(System.in);
+        int[] escolha = new int[6];
+
+        System.out.print("Informe o código do componente que se deseja editar: ");
+        codInit = ent.next();
+
+        String sql = "select * from componentecurricular where codigo = '" + codInit + "'";
+        
+
+        try {
+            ResultSet result = stm.executeQuery(sql);
+            while(result.next()){
+
+                for (int i = 0; i < escolha.length; i++) {
+                    System.out.print("MENU\n0 - Código\n1 - Nome\n2 - Carga Horaria\n3 - Descricao\n4 - Periodo\n");
+                    System.out.print("Informe o atributo que se deseja editar: ");
+
+                    do{
+                    //System.out.println("->");
                     escolha[i] = ent.nextInt();
                 } while(escolha[i] > 6 || escolha[i] < 0);
 
                 if(escolha[i] == 0){
-                    System.out.println("Digite o código\n-> ");
-                    codigo = ent.next();
-                    setCodigo(codigo);
-                } else if(escolha[i] == 1){
-                    System.out.println("Digite a carga horária\n-> ");
-                    cargaHoraria = ent.nextInt();
-                    setCargaHoraria(cargaHoraria);
-                } else if(escolha[i] == 2){
-                    System.out.println("Digite o período\n-> ");
-                    periodo = ent.nextInt();
-                    setPeriodo(periodo);
-                } else if(escolha[i] == 3){
-                    System.out.println("Digite o nome\n-> ");
-                    nome = ent.next();
-                    setNome(nome);
-                } else if(escolha[i] == 4){
-                    System.out.println("Digite a descrição\n-> ");
-                    descricao = ent.next();
-                    setNome(descricao);
-                } else {
-                    break;
+                    System.out.print("Informe o código: \n-> ");
+                    cod = ent.next();
+                    
+                    String alterInit = "update componentecurricular set codigo = '" + codInit + "' where codigo = '" + cod + "'";
+                    //System.out.println(alterInit);
+                    
+                    stm.executeUpdate(alterInit);
+
+                    //setCodigo(codigo);
+                // } else if(escolha[i] == 1){
+                //     System.out.println("Informe o nome: \n-> ");
+                //     nome = ent.next();
+                //     //setCargaHoraria(cargaHoraria);
+                // } else if(escolha[i] == 2){
+                //     System.out.println("Digite o período\n-> ");
+                //     per = ent.nextInt();
+                //     //setPeriodo(periodo);
+                // } else if(escolha[i] == 3){
+                //     System.out.println("Digite o nome\n-> ");
+                //     nome = ent.next();
+                //     //setNome(nome);
+                // } else if(escolha[i] == 4){
+                //     System.out.println("Digite a descrição\n-> ");
+                //     desc = ent.next();
+                //     //setNome(descricao);
+                 } else {
+                     break;
                 }
             }
-        } catch (Exception e){
-            System.out.println("Exceção: " + e);
-            System.out.println("O dado informado não condiz com o que se pede.");
-        } finally {
-            System.out.println("Processo encerrado.");
+                //}
+
+            }
+            result.close();
             ent.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
+    
 
     public boolean validarComponente(String c, String n){
         return (c == codigo && n == nome) ? true : false;
