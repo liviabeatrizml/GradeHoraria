@@ -9,11 +9,12 @@ public class App {
         try {
             Connection bancodedados = Conexao.inicializaConexao();
             Statement stm = bancodedados.createStatement();
-
+            
             //COMPONENTE CURRICULAR
             //ComponenteCurricular.cadastrarComponente(stm);
-            ComponenteCurricular.editarComponente(stm);
+            //ComponenteCurricular.editarComponente(stm);
             //ComponenteCurricular.buscarComponente(stm);
+            //ComponenteCurricular.excluirComponente(stm);
             //ComponenteCurricular.listaComponente(stm);
 
             //PROFESSOR

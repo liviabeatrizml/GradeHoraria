@@ -1,5 +1,6 @@
 package ufersa;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,25 +11,31 @@ public class Professor {
     private String nome;
     private String titulacao;
     private String email;
-    private String departamento;
-    private ComponenteCurricular disciplina;
-    private static LinkedList<Professor> listaProfessor = new LinkedList<>();
+    private int horasSemanais = 0;
+    private static LinkedList<Professor> professores = new LinkedList<>();
+    LinkedList<ComponenteCurricular> disciplinas;
 
-    //Metodos do banco de dados
+    public Professor(String nome, String titulacao, String email) {
+        this.nome = nome;
+        this.titulacao = titulacao;
+        this.email = email;
+        this.horasSemanais = horasSemanais;
+    }
+
     public static void cadastrarProfessor(Statement stm){
         Scanner ent = new Scanner(System.in);
-        String n, t, em, d;
+        String n, t, em;
         System.out.print("Nome: ");
         n = ent.next();
         System.out.print("Titulacao: ");
         t = ent.next();
         System.out.print("Email: ");
         em = ent.next();
-        System.out.print("Departamento: ");
-        d = ent.next();
 
-        String sql = "insert into professor (nome, titulacao, email, departamento) values ('" + n + "','" + t + "','" + em + "','" + d + "')";
-
+        String sql = "insert into professor (nome, titulacao, email) values ('" + n + "','" + t + "','" + em + "')";
+        Professor p = new Professor(n, t, em);
+        professores.add(p);
+        
         try {
             stm.executeUpdate(sql);
         } catch (SQLException e) {
@@ -37,7 +44,7 @@ public class Professor {
         }
     }
 
-    public static void excluirProfessor(Statement stm){
+    public void excluirProfessor(Statement stm){
         Scanner ent = new Scanner(System.in);
         String n;
 
