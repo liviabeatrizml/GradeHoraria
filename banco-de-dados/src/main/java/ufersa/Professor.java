@@ -1,10 +1,9 @@
 package ufersa;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Professor {
@@ -12,131 +11,215 @@ public class Professor {
     private String titulacao;
     private String email;
     private int horasSemanais = 0;
-    private static LinkedList<Professor> professores = new LinkedList<>();
-    LinkedList<ComponenteCurricular> disciplinas;
+    private static ArrayList<Professor> listaProfessor = new ArrayList<>();
+    ArrayList<ComponenteCurricular> disciplinas;
 
     public Professor(String nome, String titulacao, String email) {
         this.nome = nome;
         this.titulacao = titulacao;
         this.email = email;
-        this.horasSemanais = horasSemanais;
+        this.horasSemanais = 0;
     }
 
     public static void cadastrarProfessor(Statement stm){
+        //MUDAR A VARIAVEL "C" DEPOIS 
+        String email;
+        int escolha = 1;
         Scanner ent = new Scanner(System.in);
-        String n, t, em;
-        System.out.print("Nome: ");
-        n = ent.next();
-        System.out.print("Titulacao: ");
-        t = ent.next();
-        System.out.print("Email: ");
-        em = ent.next();
 
-        String sql = "insert into professor (nome, titulacao, email) values ('" + n + "','" + t + "','" + em + "')";
-        Professor p = new Professor(n, t, em);
-        professores.add(p);
-        
-        try {
-            stm.executeUpdate(sql);
-        } catch (SQLException e) {
-            ent.close();
-            e.printStackTrace();
-        }
-    }
+        do {
+            System.out.println("Cadastrar Professor");
+            System.out.print("Informe o email: ");
+            email = ent.next();
 
-    public void excluirProfessor(Statement stm){
-        Scanner ent = new Scanner(System.in);
-        String n;
-
-        //ARRUMAR DEPOIS 
-        System.out.print("Nome: ");
-        n = ent.next();
-
-        String sql = "delete from professor where nome ='" + n +"'";
-
-        try {
-            stm.executeUpdate(sql);
-        } catch (SQLException e) {
-            ent.close();
-            e.printStackTrace();
-        }
-
-    }
-
-    public void editarProfessor() {
-        String nome, titulacao, email, departamento;
-        Scanner ent = new Scanner(System.in);
-        int escolha[] = new int[6];
-
-        try {
-            for (int i = 0; i < escolha.length; i++) {
-                System.out.println("MENU\n");
-                System.out.println("O que você deseja editar: ");
-
-                do {
-                    System.out.println("->");
-                    escolha[i] = ent.nextInt();
-                } while (escolha[i] > 6 || escolha[i] < 0);
-
-                if (escolha[i] == 0) {
-                    System.out.println("Sem uso por tempo indeterminado");
-                } else if (escolha[i] == 1) {
-                    System.out.println("Digite o nome\n-> ");
-                    nome = ent.next();
-                } else if (escolha[i] == 2) {
-                    System.out.println("Digite o titulação\n-> ");
-                    titulacao = ent.next();
-                } else if (escolha[i] == 3) {
-                    System.out.println("Digite o email\n-> ");
-                    email = ent.next();
-                } else if (escolha[i] == 4) {
-                    System.out.println("Digite a departamento\n-> ");
-                    departamento = ent.next();
-                } else {
-                    break;
-                }
+            while (buscarProfessor(stm, email) == null) {
+                System.out.println("Professor já existe.");
+                System.out.print("Informe um novo email: ");
+                email = ent.next();
             }
-        } catch (Exception e) {
-            System.out.println("Exceção: " + e);
-            System.out.println("O dado informado não condiz com o que se pede.");
-        } finally {
-            System.out.println("Processo encerrado.");
-            ent.close();
-        }
+
+            System.out.print("Informe o nome: ");
+            String nome = "";
+            nome = ent.next();
+
+            System.out.print("Informe a titulação: ");
+            String titul = "";
+            titul = ent.next();
+
+            String sql = "insert into professor (nome, titulacao, email) values ('" + nome + "','" + titul + "','" + email + "')";
+
+            Professor prof = new Professor(nome, titul, email);
+            listaProfessor.add(prof);
+
+            try {
+                stm.executeUpdate(sql);
+                System.out.println("\nProfessor cadastrado.");
+                System.out.print("Deseja cadastrar mais algum professor?\n0 - NÃO\n1 - SIM\n-> ");
+                escolha = ent.nextInt();
+                esvaziarBuffer(ent);
+            } catch (SQLException e) {
+                ent.close();
+                System.out.println("Falha no cadastro do professor.");
+                e.printStackTrace();
+            }
+        } while (escolha != 0);
     }
 
-    public static void buscarProfessor(Statement stm){
+    public static Professor buscarProfessor(Statement stm) {
         Scanner ent = new Scanner(System.in);
-        String n;
-        //ALTERAR DEPOIS PARA BUSCAR PELO EMAIL
-        System.out.print("Nome: ");
-        n = ent.next();
-
-        String sql = "select * from professor where nome ='" + n +"'";
-
-        try {
-            ResultSet result = stm.executeQuery(sql);
-            while(result.next()){
-                System.out.println("Professor encontrado");                 
-            } 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        System.out.println("Buscar Professor ");
+        System.out.print("Informe o código do professor que se deseja buscar: ");
+        String c = ent.next();
         ent.close();
+
+        return buscarProfessor(stm, c);
     }
 
-    public static void listaProfessor(Statement stm){
-        String sql = "select * from professor";
+    public static Professor buscarProfessor(Statement stm, String email) {
+        String sql = "select * from professor where email = '" + email + "'";
 
         try {
             ResultSet result = stm.executeQuery(sql);
+            String n = "";
+            String tit = "";
+            String em = "";
 
-            while(result.next()){
-                System.out.println("Nome: " + result.getString("nome"));
+            while (result.next()) {
+                System.out.println("Professor encontrado.");
+                n = result.getString("nome");
+                tit = result.getString("titulacao");
+                em = result.getString("email");
+                System.out.println(result.getString("nome") + " | " + result.getString("titulacao") + " | " + result.getString("email"));
             }
+
+            if(email.equals(em)){
+                return null;
+            } else {
+                Professor prof = new Professor(n, tit, em);
+                return prof;
+            }
+
         } catch (SQLException e) {
+            System.out.println("Falha na busca do professor.");
             e.printStackTrace();
-        } 
+            return null;
+        }
+    }
+
+    public static void excluirProfessor(Statement stm) {
+        Scanner ent = new Scanner(System.in);
+        int escolha = 1;
+        do {
+            System.out.println("Excluir Professor ");
+            System.out.print("Informe o email do professor que se deseja excluir: ");
+            String em = ent.next();
+
+            String sql = "delete from professor where email = '" + em + "'";
+
+            try {
+                stm.executeUpdate(sql);
+                System.out.println("Professor excluído!");
+                System.out.print("Deseja excluir mais algum professor?\n0 - NÃO\n1 - SIM\n-> ");
+                escolha = ent.nextInt();
+                esvaziarBuffer(ent);
+            } catch (SQLException e) {
+                ent.close();
+                System.out.println("Falha na exclusão do professor.");
+                e.printStackTrace();
+            }
+        } while (escolha != 0);
+    }
+
+    public static void editarProfessor(Statement stm) {
+        Scanner ent = new Scanner(System.in);
+        System.out.println("Editar Professor ");
+        String emailEnt;
+        int escolha = 0;
+        String nome = "";
+
+        System.out.print("Informe o email do professor que se deseja editar: ");
+        emailEnt = ent.next();
+
+        try {
+            do {
+                System.out.print(
+                        "MENU\n1 - Nome\n2 - Titulação\nUse qualquer outra tecla para encerrar\n");
+                System.out.print("Informe o atributo que se deseja editar: ");
+                escolha = ent.nextInt();
+                esvaziarBuffer(ent);
+
+                String alterInit = "update professor set ";
+
+                switch (escolha) {
+                    case 1:
+                        System.out.println("Informe o novo nome: ");
+                        nome = ent.nextLine();
+                        alterInit += "nome = '" + nome + "' where email = '" + emailEnt + "'";
+                        stm.executeUpdate(alterInit);
+                        break;
+
+                    case 2:
+                        System.out.println("Informe a nova titulação: ");
+                        String titul = ent.next();
+
+                        alterInit += "titulacao = '" + titul + "' where email = '" + emailEnt + "'";
+                        stm.executeUpdate(alterInit);
+                        break;
+
+                    default:
+                        System.out.println("Edição encerrada.");
+                        break;
+                }
+            } while (escolha >= 0 && escolha < 4);
+        } catch (SQLException e) {
+            System.out.println("Falha na edição do componente.");
+            ent.close();
+            e.printStackTrace();
+        }
+    }
+
+    private static void esvaziarBuffer(Scanner ent) {
+        if (ent.hasNextLine()) {
+            ent.nextLine();
+        }
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getTitulacao() {
+        return titulacao;
+    }
+
+    public void setTitulacao(String titulacao) {
+        this.titulacao = titulacao;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public int getHorasSemanais() {
+        return horasSemanais;
+    }
+
+    public void setHorasSemanais(int horasSemanais) {
+        this.horasSemanais = horasSemanais;
+    }
+
+    @Override
+    public String toString() {
+        return "Professor [nome=" + nome + ", titulacao=" + titulacao + ", email=" + email + ", horasSemanais="
+                + horasSemanais + "]";
     }
 
     /*
