@@ -391,6 +391,7 @@ public class Turma {
 
             //SE O CÓDIGO FOR VAZIO ELE NÃO EXISTE, CASO CONTRARIO CRIA-SE UMA TURMA TEMPORARIA
             if (codigo == "") {
+                System.out.println("Turma não encontrada.");
                 return null;
             } else {
                 Turma turmaTemporario = new Turma(numero, horario, vagas,
@@ -470,10 +471,16 @@ public class Turma {
         String horario = "";
         int vagas = 0;
 
-        System.out.print("Informe o código do componente da turma que se deseja editar: ");
-        codigo_ent = ent.next().toUpperCase();
-        System.out.print("Informe o número da turma que se deseja editar: ");
-        numero_turma = ent.nextInt();
+        //VERIFICAÇÃO DE EXISTÊNCIA DO CÓDIGO E NUMERO TURMA
+        do{
+            System.out.print("Informe o código do componente da turma que se deseja editar: ");
+            codigo_ent = ent.next().toUpperCase();
+        }while(ComponenteCurricular.verComponente(stm, codigo_ent) == null);
+
+        do{ 
+            System.out.print("Informe o número da turma que se deseja editar: ");
+            numero_turma = ent.nextInt();
+        }while(Turma.buscarTurma(stm, codigo_ent, numero_turma) == null);
 
         //VERIFICA SE O CÓDIGO E O NÚMERO DA TURMA EXISTE NA TABELA
         if (buscarTurma(stm, codigo_ent, numero_turma) != null) {
@@ -481,8 +488,10 @@ public class Turma {
                 //PERGUNTA QUAL ATRIBUTO DESEJA EDITAR DE ACORDO COM A ESCOLHA
                 do {
                     System.out.print("1 - Horário\n2 - Vagas\n3 - Sair\n");
-                    System.out.print("Informe o que se deseja editar: ");
-                    escolha = ent.nextInt();
+                    do{
+                        System.out.print("Informe o que se deseja editar: ");
+                        escolha = ent.nextInt();
+                    }while(escolha < 1 || escolha > 3);
 
                     //REALIZA A ATUALIZAÇÃO NO BANCO DE DADOS
                     String alterInit = "update turma set ";
@@ -496,6 +505,7 @@ public class Turma {
                             alterInit += "horario = '" + horario + "' where codigo_comp = '" + codigo_ent
                                     + "' AND numero_turma = " + numero_turma;
                             stm.executeUpdate(alterInit);
+                            System.out.println("Edição concluída.");
                             break;
                         case 2:
                             System.out.print("Informe a nova quantidade de vagas: ");
@@ -507,11 +517,10 @@ public class Turma {
                             alterInit += "vagas = " + vagas + " where codigo_comp = '" + codigo_ent
                                     + "' AND numero_turma = " + numero_turma;
                             stm.executeUpdate(alterInit);
+                            System.out.println("Edição concluída.");
                             break;
                         default:
-                            System.out.println("Edição concluída.");
-
-                            esvaziarBuffer(ent);
+                            System.out.println("Saida de edição");
 
                             break;
                     }

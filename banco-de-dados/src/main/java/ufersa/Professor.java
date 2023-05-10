@@ -52,8 +52,7 @@ public class Professor {
             titulacao = ent.next().toUpperCase();
 
             //COMANDO DE INSERÇÃO NO BANCO DE DADOS
-            String sql = "insert into professor (nome, titulacao, email) values ('" + nome + "','" + titulacao + "','"
-                    + email + "')";
+            String sql = "insert into professor (nome, titulacao, email) values ('" + nome + "','" + titulacao + "','"+ email + "')";
 
             //CRIAÇÃO DE OBJETO ADICIONANDO AO ARRAY
             Professor prof = new Professor(nome, titulacao, email);
@@ -142,6 +141,7 @@ public class Professor {
                 Professor professorTemporario = new Professor(nome, titulacao, email);
                 return professorTemporario;
             } else {
+                System.out.println("Professor não encontrado.");
                 return null;
             }
 

@@ -59,7 +59,7 @@ public class ComponenteCurricular {
 
             System.out.print("Informe a carga horária: ");
             carga_horaria = ent.nextInt();
-
+                
             //VERIFICAÇÃO DE CARGA HORÁRIA, ACEITANDO APENAS 30, 60 E 90 HORAS/AULAS
             while (carga_horaria != 30 && carga_horaria != 60 && carga_horaria != 90) {
                 System.out.println("Carga Horária inválida.\nInforme a carga horária corretamente: ");
@@ -100,7 +100,6 @@ public class ComponenteCurricular {
                 esvaziarBuffer(ent);
 
             } catch (SQLException e) {
-
                 System.out.println("Falha no cadastro do componente.");
                 e.printStackTrace();
             }
@@ -131,15 +130,13 @@ public class ComponenteCurricular {
                 categoria = result.getString("categoria");
             }
 
-            //SE NÃO EXISTIR CÓDIGO O COMPONENTE NÃO EXISTE, CASO CONTRARIO CRIA-SE UM COMPONENTE TEMPORARIA QUE É PASSADO COMO RETORNO DA FUNÇÃO
+            //SE O CÓDIGO FOR VAZIO O COMPONENTE NÃO EXISTE, CASO CONTRARIO CRIA-SE UM COMPONENTE TEMPORARIA QUE É PASSADO COMO RETORNO DA FUNÇÃO
             if (codigo == "") {
                 return null;
             } else {
-                ComponenteCurricular componenteTemporario = new ComponenteCurricular(codigo_comp, nome, carga_horaria,
-                        semestre, categoria);
+                ComponenteCurricular componenteTemporario = new ComponenteCurricular(codigo_comp, nome, carga_horaria, semestre, categoria);
                 return componenteTemporario;
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
@@ -181,6 +178,7 @@ public class ComponenteCurricular {
 
             //SE NÃO EXISTIR CÓDIGO O COMPONENTE NÃO EXISTE, CASO CONTRARIO CRIA-SE UM COMPONENTE TEMPORARIA QUE É PASSADO COMO RETORNO DA FUNÇÃO
             if (codigo == "") {
+                System.out.println("Componente não encontrado.");
                 return null;
             } else {
                 ComponenteCurricular componenteTemporario = new ComponenteCurricular(codigo_comp, nome, carga_horaria,
@@ -333,7 +331,7 @@ public class ComponenteCurricular {
             } catch (SQLException e) {
                 System.out.println("Falha na edição do componente.");
                 e.printStackTrace();
-            }
+            } 
         }
     }
 

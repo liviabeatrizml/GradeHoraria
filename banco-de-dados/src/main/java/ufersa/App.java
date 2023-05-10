@@ -3,6 +3,7 @@ package ufersa;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class App {
@@ -20,7 +21,7 @@ public class App {
             System.out.println("\nDISCIPLINA: PEX0130 - PROGRAMAÇÃO ORIENTADA A OBJETOS\nPROFESSOR: ITALO AUGUSTO DE SOUZA DE ASSIS\nDESCRIÇÃO: SISTEMA DE GRADE HORÁRIA\nDISCENTES: GEÍSA MORAIS GABRIEL - 2021010372\n\t   LÍVIA BEATRIZ MAIA DE LIMA - 2021010871");
 
             do{
-                str += "\n\n-- SEJA BEM VINDO AO SISTEMA DE GRADE HORÁRIA UFERSA --\n\n";
+                str += "\n-- SEJA BEM VINDO AO SISTEMA DE GRADE HORÁRIA UFERSA --\n\n";
             str += " 1 -- MENU COMPONENTE CURRICULAR\n 2 -- MENU PROFESSOR\n 3 -- MENU TURMA\n 4 -- MENU GRADE HORÁRIA\n 5 -- ENCERRAR\n";
             do {
                 str += "\nQual menu se deseja editar: ";
@@ -98,12 +99,14 @@ public class App {
                 } while (escolha != 3);
                     break;
                 default:
-                    System.out.println("\n\t-- SISTEMA ENCERRADO --\n");
+                    System.out.println("\n-- SISTEMA ENCERRADO --\n");
                     break;
             }
             }while (escolha != 5);
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (InputMismatchException e){
+            System.out.println("Erro de tipo. Programa finalizado.");
         }
     }
 }
