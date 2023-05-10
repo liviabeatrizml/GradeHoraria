@@ -22,17 +22,20 @@ public class Professor {
     }
 
     public static void cadastrarProfessor(Statement stm) {
+        //INICIALIZAÇÃO DAS VARIÁVEIS
         String nome = "";
         String titulacao = "";
         String email = "";
         int escolha = 1;
 
+        //ESTRUTURA DE REPETIÇÃO PARA CASO O USUARIO QUEIRA REPETIR O PROCESSO DE CADASTRO
         do {
             System.out.println("Cadastrar Professor");
             System.out.print("Informe o nome do usuário de email: ");
             email = ent.next().toLowerCase();
             email += "@ufersa.edu.br";
 
+            //VERIFICAÇÃO DE EXISTÊNCIA DE PROFESSOR PARA CASO ELE JÁ EXISTA NÃO TER COMO CADASTRAR
             while (buscarProfessor(stm, email) != null) {
                 System.out.println("Professor já registrado.");
                 System.out.print("Informe o novo nome do usuário de email: ");
@@ -48,8 +51,11 @@ public class Professor {
             System.out.print("Informe a titulação: ");
             titulacao = ent.next().toUpperCase();
 
+            //COMANDO DE INSERÇÃO NO BANCO DE DADOS
             String sql = "insert into professor (nome, titulacao, email) values ('" + nome + "','" + titulacao + "','"
                     + email + "')";
+
+            //CRIAÇÃO DE OBJETO ADICIONANDO AO ARRAY
             Professor prof = new Professor(nome, titulacao, email);
             listaProfessor.add(prof);
 
@@ -70,6 +76,8 @@ public class Professor {
     }
 
     public static Professor buscarProfessor(Statement stm, String email) {
+        //METODO SEM EXIBIÇÃO
+        //COMANDO DE BUSCA NO BANCO DE DADOS DE UM PROFESSOR PASSANDO UM EMAIL ESPECIFICO
         String sql = "select * from professor where email = '" + email + "'";
 
         try {
@@ -78,12 +86,14 @@ public class Professor {
             String titulacao = "";
             String em = "";
 
+            //PERCORRENDO A SELEÇÃO FEITA E PEGA CADA ATRIBUTO PASSADO NELA
             while (result.next()) {
                 nome = result.getString("nome");
                 titulacao = result.getString("titulacao");
                 em = result.getString("email");
             }
 
+            //SE O EMAIL FOR IGUAL O EMAIL PASSADO É PORQUE O PROFESSOR EXISTE, CASO CONTRARIO O RETORNO É NULL
             if (email.equals(em)) {
                 Professor professorTemporario = new Professor(nome, titulacao, email);
                 return professorTemporario;
@@ -107,6 +117,8 @@ public class Professor {
     }
 
     public static Professor verProfessor(Statement stm, String email) {
+        //METODO COM EXIBIÇÃO
+        //COMANDO DE BUSCA NO BANCO DE DADOS DE UM PROFESSOR PASSANDO UM EMAIL ESPECIFICO
         String sql = "select * from professor where email = '" + email + "'";
 
         try {
@@ -115,15 +127,17 @@ public class Professor {
             String titulacao = "";
             String em = "";
 
+            //PERCORRENDO A SELEÇÃO FEITA E PEGA CADA ATRIBUTO PASSADO NELA
+            //MOSTRA AS INFORMAÇÕES DO PROFESSOR ENCONTRADO
             while (result.next()) {
-                System.out.println("-- Professor encontrado --");
+                System.out.println("\n-- Professor encontrado --");
                 nome = result.getString("nome");
                 titulacao = result.getString("titulacao");
                 em = result.getString("email");
                 System.out.println("[ " + nome + " | " + titulacao + " | " + em + " ]");
             }
 
-            // Email == em ele existe
+            //SE O EMAIL FOR IGUAL O EMAIL PASSADO É PORQUE O PROFESSOR EXISTE, CASO CONTRARIO O RETORNO É NULL
             if (email.equals(em)) {
                 Professor professorTemporario = new Professor(nome, titulacao, email);
                 return professorTemporario;
@@ -140,6 +154,8 @@ public class Professor {
     }
 
     public static void listarProfessor(Statement stm) {
+        //METODO COM EXIBIÇÃO
+        //LISTA TODOS OS PROFESSORES CADASTRADO NO BANCO DE DADOS
         System.out.println("Listar Professor ");
         String sql = "select * from professor";
 
@@ -156,6 +172,7 @@ public class Professor {
     }
 
     public static void editarProfessor(Statement stm) {
+        //INICIALIZANDO AS VARIÁVEIS
         String email = "";
         String nome = "";
         String titulacao = "";
@@ -166,8 +183,10 @@ public class Professor {
         email = ent.next().toLowerCase();
         email += "@ufersa.edu.br";
 
+        //VERIFICA SE O PROFESSOR EXISTE PARA PODER ASSIM FAZER A EDIÇÃO
         if (verProfessor(stm, email) != null) {
             try {
+                //ESTRUTURA DE REPETIÇÃO PARA CASO O USUARIO QUEIRA EDITAR MAIS DE UM ATRIBUTO DO MESMO PROFESSOR
                 do {
                     System.out.print("-- MENU --\n1 - Nome\n2 - Titulação\n3 - Sair\n");
                     System.out.print("Informe o que se deseja editar: ");
@@ -175,8 +194,10 @@ public class Professor {
 
                     esvaziarBuffer(ent);
 
+                    //COMANDO INICIAL DE ATUALIZAÇÃO DO BANCO DE DADOS
                     String alterInit = "update professor set ";
 
+                    //VALIDA A ESCOLHA E ENTRA NO CASO ESCOLHIDO PARA FAZER A EDIÇÃO
                     switch (escolha) {
                         case 1:
                             System.out.print("Informe o novo nome: ");
@@ -213,12 +234,14 @@ public class Professor {
             email = ent.next().toLowerCase();
             email += "@ufersa.edu.br";
 
+            //VERIFICA SE O PROFESSOR EXISTE PARA PODER FAZER A EXCLUSÃO
             if (verProfessor(stm, email) != null) {
+                //COMANDO DE EXCLUSÃO NO BANCO DE DADOS DE UM PROFESSOR PASSANDO UM EMAIL ESPECIFICO
                 String sql = "delete from professor where email = '" + email + "'";
 
                 try {
                     stm.executeUpdate(sql);
-                    System.out.println("-- Professor excluído --");
+                    System.out.println("\n-- Professor excluído --");
                     System.out.print("\nDeseja excluir mais algum professor?\n0 - NÃO\n1 - SIM\n-> ");
                     escolha = ent.nextInt();
 

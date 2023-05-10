@@ -7,10 +7,10 @@ import java.util.Scanner;
 
 public class App {
     private static Scanner ent = new Scanner(System.in);
-
     public static void main(String[] args) {
         try {
             Connection bancodedados = Conexao.inicializaConexao();
+            //STATEMENT --> EXECUTA AS CONSULTAS/INSTRUÇÕES NO BANCO DE DADOS
             Statement stm = bancodedados.createStatement();
 
             String str = "";
@@ -20,7 +20,7 @@ public class App {
             System.out.println("\nDISCIPLINA: PEX0130 - PROGRAMAÇÃO ORIENTADA A OBJETOS\nPROFESSOR: ITALO AUGUSTO DE SOUZA DE ASSIS\nDESCRIÇÃO: SISTEMA DE GRADE HORÁRIA\nDISCENTES: GEÍSA MORAIS GABRIEL - 2021010372\n\t   LÍVIA BEATRIZ MAIA DE LIMA - 2021010871");
 
             do{
-                str += "\n\n\t-- SEJA BEM VINDO AO SISTEMA DE GRADE HORÁRIA UFERSA --\n\n";
+                str += "\n\n-- SEJA BEM VINDO AO SISTEMA DE GRADE HORÁRIA UFERSA --\n\n";
             str += " 1 -- MENU COMPONENTE CURRICULAR\n 2 -- MENU PROFESSOR\n 3 -- MENU TURMA\n 4 -- MENU GRADE HORÁRIA\n 5 -- ENCERRAR\n";
             do {
                 str += "\nQual menu se deseja editar: ";
